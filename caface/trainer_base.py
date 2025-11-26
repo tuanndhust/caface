@@ -28,16 +28,18 @@ class BaseTrainer(LightningModule):
             checkpoint_path = self.hparams.start_from_model_optim_statedict
         else:
             checkpoint_path = self.hparams.start_from_model_statedict
-
+            print("DBug: load checkpoint------------- ", checkpoint_path)
         if checkpoint_path.startswith('experiments'):
             proj_root = os.getcwd().split(os.environ.get("PROJECT_NAME"))[0] + os.environ.get("PROJECT_NAME")
             checkpoint_path = os.path.join(proj_root, checkpoint_path)
-
+            print("DBug: load checkpoint experiments -------------", checkpoint_path)
         checkpoint = torch.load(checkpoint_path, map_location='cpu')
 
         if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
             # from pytorch lightning checkpoint
             statedict = checkpoint['state_dict']
+            print("self.hparams.arch: ", self.hparams.arch)
+            print("checkpoint['hyper_parameters']['arch']", checkpoint['hyper_parameters']['arch'])
             assert checkpoint['hyper_parameters']['arch'] == self.hparams.arch
             # match_res = self.load_state_dict(statedict, strict=True)
             if len(self.state_dict()) == len(statedict):
@@ -222,6 +224,7 @@ class BaseTrainer(LightningModule):
             raveled_intermediate = rearrange(folded_intermediates, 'b t c h w-> (b t) c h w')
             return folded_features, raveled_intermediate
         else:
+            # print("DEBUG --- self.hparams.use_precompute_trainrec: ", self.hparams.use_precompute_trainrec)
             # stylebased
             if 'style1357' in self.hparams.use_precompute_trainrec:
                 tot_styledim = get_styledim('1,3,5,7')
@@ -240,6 +243,7 @@ class BaseTrainer(LightningModule):
                 style_index_dict = dict(zip(split_index, np.arange(len(split_index))))
             else:
                 raise ValueError('not implemented style yet')
+            print("DEBUG --- tot_styledim: ", tot_styledim)
             folded_features, folded_intermediates = torch.split(torch.tensor(features), [512, tot_styledim * 2], dim=2)
             B, T, _ = folded_intermediates.shape
             folded_intermediates = folded_intermediates.view(B, T, tot_styledim, 2)

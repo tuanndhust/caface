@@ -84,7 +84,7 @@ def main(args, trainer_module, data_module):
 if __name__ == '__main__':
 
     args, trainer_module, data_module = config.get_args()
-
+    print("DEBUG --- data module: ",type(data_module), data_module)
     print(args)
 
     if args.distributed_backend == 'ddp' and args.gpus > 0:

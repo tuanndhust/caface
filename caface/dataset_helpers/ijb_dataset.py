@@ -20,8 +20,9 @@ from dataset_helpers.insightface_ijb_helper import eval_helper as eval_helper_ve
 
 def make_face_ijbb_dataset(ijb_root, val_data_path, num_sample_per_identity, **kwargs):
     dataset_name = 'IJBB'
+    print("ijb_root: ", ijb_root)
     landmark_list_path = os.path.join('{}/{}/meta/{}_name_5pts_score.txt'.format(ijb_root, dataset_name, dataset_name.lower()))
-
+    # landmark_list_path = os.path.join('{}/{}_name_5pts_score.txt'.format(ijb_root, dataset_name.lower()))
     img_list = open(landmark_list_path)
     files = img_list.readlines()
     print('IJBB files:', len(files))

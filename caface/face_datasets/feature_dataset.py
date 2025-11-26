@@ -35,15 +35,18 @@ class BaseMXFeatureDataset(Dataset):
         idx = self.imgidx[index]
         s = self.record.read_idx(idx)
         header, img = mx.recordio.unpack(s)
+        # print("DEBUG -- feature_dataset/read_sample: ", img)
         label = header.label
         if not isinstance(label, numbers.Number):
             label = label[0]
         label = torch.tensor(label, dtype=torch.long)
-        if '16' in self.root_dir:
-            sample = np.frombuffer(img, dtype=np.float16)
-        else:
-            sample = np.frombuffer(img, dtype=np.float32)
-
+        # print("DEBUG -- root_dir: ", self.root_dir)
+        # if '16' in self.root_dir:
+        #     sample = np.frombuffer(img, dtype=np.float16)
+        # else:
+        #     sample = np.frombuffer(img, dtype=np.float32)
+        sample = np.frombuffer(img, dtype=np.float16)
+        # print(f"DEBUG -- sample shape: {len(sample)}")
         if len(sample) == 5 * 2432:
             # 5 aug + 1,3,5,7 style
             sample = sample.reshape(5, 2432)
@@ -69,6 +72,7 @@ class BaseMXFeatureDataset(Dataset):
             sample = sample.reshape(16, 2336)
             sample = sample.astype(np.float32)
         else:
+            print(f"Unrecognized sample shape: {len(sample)}")
             raise ValueError('not impleented feature')
 
         sample = torch.tensor(sample)

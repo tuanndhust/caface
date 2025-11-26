@@ -1,6 +1,8 @@
 
-DATA_ROOT='<YOUR_CHOICE>'
-PRECOMPUTE_TRAIN_REC='adaface_webface4m_subset_ir101_style35_augmenterv3_fp16'
+DATA_ROOT='../Project-VHT/CAFACE_DATA/'
+# PRECOMPUTE_TRAIN_REC='adaface_webface4m_subset_ir101_style35_augmenterv3_fp16'
+PRECOMPUTE_TRAIN_REC='AdaFaceWebFace4M_style35'
+# BACKBONE_MODEL='../pretrained_models/AdaFaceWebFace4M.ckpt'
 BACKBONE_MODEL='../pretrained_models/AdaFaceWebFace4M.ckpt'
 CENTER_PATH='../pretrained_models/center_WebFace4MAdaFace_webface4m_subset.pth'
 
@@ -11,12 +13,11 @@ python main.py \
           --start_from_model_statedict ${BACKBONE_MODEL} \
           --center_path ${CENTER_PATH} \
           --train_data_path WebFace4M \
-          --gpus 2 \
+          --gpus 1 \
           --wandb_tags ir_101_arcface \
-          --arch ir_101_arcface \
+          --arch ir_101 \
           --tpus 0 \
           --num_workers 16 \
-          --head adaface_v3 \
           --batch_size 512 \
           --val_batch_size 64 \
           --num_images_per_identity 32 \
@@ -38,3 +39,5 @@ python main.py \
           --img_aug_scheme v3 \
           --use_memory \
           --memory_loss_lambda 1.0
+#   --head adaface_v3 \
+#   --arch ir_101_arcface \

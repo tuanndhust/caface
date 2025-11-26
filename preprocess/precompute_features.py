@@ -91,7 +91,9 @@ def extract_and_save_feature(i, item, q_out, augmenter, backbone, image_root):
     aug_samples = augmenter.make_aug_samples(fullpath, num_aug=16)
 
     feature, norm, intermediate = backbone(aug_samples.to("cuda:0"), return_style=[3,5])
-
+    print("intermediate: ", len(intermediate))
+    print("Norm: ", len(norm))
+    print("feature: ", len(feature))
     # reshape features
     mag_feature = feature * norm
     intermediates = torch.cat(intermediate, dim=1) # [[16, 128, 2], [16, 256, 2]] -> [16, 384, 2]
@@ -114,9 +116,11 @@ def extract_and_save_feature(i, item, q_out, augmenter, backbone, image_root):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--image_root', type=str, default='./path_to/webface4m_subset_images')
+    parser.add_argument('--image_root', type=str, default='../Project-VHT/webface4m-0000')
     parser.add_argument('--pretrained_model_path', type=str, default='../pretrained_models/AdaFaceWebFace4M.ckpt')
+    # parser.add_argument('--pretrained_model_path', type=str, default='../pretrained_models/adaface_ir101_webface4m.ckpt')
     parser.add_argument('--save_dir', type=str, default='./AdaFaceWebFace4M')
+    # parser.add_argument('--save_dir', type=str, default='../Project-VHT/CAFACE_DATA/adaface_ir101_webface4m')
     args = parser.parse_args()
 
     augmenter = image_augmenter.MultipleAugmenter()
